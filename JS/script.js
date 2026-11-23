@@ -350,18 +350,6 @@ function configurarBotoes() {
     });
 
     pegar('form-jogo').addEventListener('submit', salvarJogo);
-
-    // atualiza o catálogo com os dados do Supabase
-    
-    pegar('btn-reiniciar').addEventListener('click', async function() {
-        try {
-            await atualizar();
-            aviso('Jogos atualizados.');
-
-        } catch (erro) {
-            aviso('Erro: ' + erro.message);
-        }
-    });
 }
 
 // Inicialização do site
