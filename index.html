@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca de Jogos | TCA</title>
+
+  <!-- CSS e Biblioteca do supabase -->
+
+  <link rel="stylesheet" href="CSS/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Cabeçalho do Site -->
+
+  <header class="topo">
+    <h1>BIBLIOTECA <span>DE JOGOS</span></h1>
+
+    <div class="conta">
+      <span id="boas-vindas"></span>
+      <button id="btn-sair" type="button" hidden>Sair</button>
+    </div>
+  </header>
+
+  <!-- Login e Criação de Conta -->
+
+  <section id="tela-login" class="painel-login">
+    <h2 id="titulo-login">Entrar</h2>
+    <p class="subtitulo">Entre com seu nome ou crie uma conta.</p>
+
+    <form id="form-login">
+      <label for="nome-usuario">Nome do usuário</label>
+
+      <input
+        id="nome-usuario"
+        type="text"
+        maxlength="100"
+        autocomplete="off"
+        placeholder="Ex.: Davi"
+        required
+      >
+
+      <p id="mensagem-login" class="erro" role="status"></p>
+
+      <button class="primario" type="submit" id="btn-entrar">Entrar</button>
+    </form>
+
+    <p class="ajuda">
+      <span id="texto-troca">Não tem conta?</span>
+      <button id="btn-trocar" class="link" type="button">Criar uma conta</button>
+    </p>
+  </section>
+
+  <!-- Conteúdo Principal do Site -->
+
+  <main id="aplicativo" hidden>
+
+    <!-- Navegação Entre Catálogo e Biblioteca -->
+
+    <nav class="abas" aria-label="Navegação principal">
+      <button id="aba-catalogo" class="aba ativa" type="button">Catálogo</button>
+      <button id="aba-biblioteca" class="aba" type="button">Minha biblioteca</button>
+      <button id="btn-cadastrar" class="primario" type="button">+ Cadastrar jogo</button>
+    </nav>
+
+    <!-- Título da Página e Quantidade de Jogos -->
+
+    <div class="cabecalho-pagina">
+      <div>
+        <h2 id="titulo-pagina">Catálogo</h2>
+        <p id="descricao-pagina">Descubra jogos e adicione à sua biblioteca pessoal.</p>
+      </div>
+
+      <div class="numeros">
+        <div>
+          <strong id="total-catalogo">0</strong>
+          <span>No catálogo</span>
+        </div>
+
+        <div>
+          <strong id="total-biblioteca">0</strong>
+          <span>Na biblioteca</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros dos Jogos -->
+
+    <section class="filtros" aria-label="Filtros de jogos">
+
+      <label>
+        Pesquisar
+        <input
+          id="campo-busca"
+          type="search"
+          placeholder="Nome ou desenvolvedora..."
+        >
+      </label>
+
+      <label>
+        Gênero
+        <select id="filtro-genero">
+          <option value="">Todos os gêneros</option>
+        </select>
+      </label>
+
+      <label>
+        Plataforma
+        <select id="filtro-plataforma">
+          <option value="">Todas as plataformas</option>
+        </select>
+      </label>
+
+      <button id="btn-limpar" type="button">Limpar filtros</button>
+    </section>
+
+    <!-- Resultado da Pesquisa -->
+
+    <p id="resultado-filtro" class="resultado" role="status"></p>
+
+    <!-- Mensagens de Aviso -->
+
+    <p id="aviso" role="status" hidden></p>
+
+    <!-- Lista de Jogos do Catálogo -->
+
+    <section
+      id="catalogo"
+      class="grade"
+      aria-label="Jogos do catálogo"
+    ></section>
+
+    <!-- Jogos da Biblioteca Pessoal -->
+
+    <section
+      id="biblioteca"
+      class="secoes"
+      hidden
+      aria-label="Jogos da minha biblioteca"
+    ></section>
+
+    <!-- Informações e Atualização do Catálogo -->
+
+    <div class="informacoes">
+      <h3>Sua biblioteca de jogos</h3>
+
+      <p>Explore novos jogos, descubra diferentes gêneros e encontre sua próxima aventura.</p>
+
+      <p>Organize sua coleção e acompanhe os jogos que está jogando, já concluiu ou pretende jogar.</p>
+
+      <button id="btn-reiniciar" type="button">Atualizar catálogo</button>
+    </div>
+
+  </main>
+
+  <!-- Formulário para Cadastrar ou Editar Jogos -->
+
+  <dialog id="modal-jogo">
+    <form id="form-jogo">
+
+      <h2 id="titulo-modal">Cadastrar jogo</h2>
+      <p class="subtitulo">Cadastre um jogo para compartilhar no catálogo.</p>
+      <p id="mensagem-jogo" class="erro" role="status"></p>
+
+      <!-- Dados do Jogo -->
+
+      <label>
+        Nome do jogo
+        <input name="nome" maxlength="150" required>
+      </label>
+
+      <label>
+        Descrição
+        <textarea name="descricao" rows="3" required></textarea>
+      </label>
+
+      <label>
+        Desenvolvedora
+        <input name="desenvolvedora" maxlength="100" required>
+      </label>
+
+      <label>
+        Ano de lançamento
+        <input name="ano" type="number" min="1950" max="2100" required>
+      </label>
+
+      <label>
+        Gênero principal
+        <select name="genero" required></select>
+      </label>
+
+      <!-- Plataformas Disponíveis -->
+
+      <fieldset>
+        <legend>Plataformas (escolha uma ou mais)</legend>
+        <div id="opcoes-plataformas" class="opcoes-plataformas"></div>
+      </fieldset>
+
+      <!-- Status Inicial do Jogo na Biblioteca -->
+
+      <label id="campo-status-inicial">
+        Adicionar à minha biblioteca como
+
+        <select name="status">
+          <option value="">Não adicionar agora</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Jogando">Jogando</option>
+          <option value="Quero Jogar">Quero Jogar</option>
+        </select>
+      </label>
+
+      <!-- Botões do Formulário -->
+      
+      <div class="acoes">
+        <button id="btn-cancelar" type="button">Cancelar</button>
+        <button id="btn-salvar-jogo" type="submit" class="primario">Salvar jogo</button>
+      </div>
+
+    </form>
+  </dialog>
+
+  <script src="env.js"></script>
+  <script type="module" src="JS/script.js"></script>
+
+</body>
+</html>
